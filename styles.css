@@ -13,20 +13,46 @@
     --ease-premium: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+@keyframes ambientGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 body {
-    background-color: var(--bg);
+    background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #050505, #111111);
+    background-size: 400% 400%;
+    animation: ambientGlow 20s ease infinite;
     color: var(--text-primary);
     font-family: var(--font-body);
     margin: 0;
     padding: 0;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+}
+
+/* Mesh Noise Effect */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999; /* overlay everything subtly */
+    /* Generates an SVG noise pattern inline */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
 }
 
 /* Typography Overrides for Luxury Feel */
 h1, h2, h3, h4, h5, h6, .logo {
     font-family: var(--font-heading);
     font-weight: 600;
+    letter-spacing: 0.05em;
+    text-wrap: balance; /* Prevents typographic widows/orphans */
 }
 
 /* Visuales: Glass Card */
@@ -35,19 +61,21 @@ h1, h2, h3, h4, h5, h6, .logo {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 16px;
-    border: 1px solid var(--glass-border);
-    /* Sutil borde de gradiente a través de box-shadow */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Updated glassmorphism border */
+    /* Updated deep luxury shadow */
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
     padding: 2.5rem;
     transition: transform 0.4s var(--ease-premium),
-                box-shadow 0.4s var(--ease-premium);
+                box-shadow 0.4s var(--ease-premium),
+                border-color 0.4s var(--ease-premium);
 }
 
 .glass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7),
+    transform: translateY(-8px);
+    box-shadow: 0 50px 120px rgba(0, 0, 0, 0.9),
                 inset 0 1px 0 rgba(212, 175, 55, 0.2);
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 /* UX Predictiva: Animaciones fadeIn orgánicas */
