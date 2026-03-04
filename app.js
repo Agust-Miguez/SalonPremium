@@ -158,17 +158,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Simular envío exitoso
-            saveUserToStorage();
+            // Deshabilitar botón temporalmente para prevenir doble envío
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Procesando...';
+            }
 
-            // Ocultar formulario y mostrar mensaje de éxito
-            form.innerHTML = `
-                <div class="success-message fade-in" style="text-align: center; padding: 3rem;">
-                    <h3 style="color: var(--gold); margin-bottom: 1rem;">¡Reserva Confirmada, ${state.client.name.split(' ')[0]}!</h3>
-                    <p>Te esperamos el ${state.appointment.date} a las ${state.appointment.time}.</p>
-                    <p style="font-size: 0.9rem; margin-top: 2rem; color: var(--text-secondary);">Recibirás un recordatorio por WhatsApp.</p>
-                </div>
-            `;
+            // Realizar el envío de forma asíncrona usando la lógica Offline-First del módulo API
+            window.api.sendBooking(state).then(success => {
+                // Guardar localmente para personalización futura
+                saveUserToStorage();
+
+                // Mostrar mensaje de éxito (o advertencia si se guardó offline)
+                const isOfflineMsg = !navigator.onLine ?
+                    '<p style="color: var(--gold); font-size: 0.85rem; margin-top: 1rem;">Estás sin conexión. Tu reserva se enviará automáticamente cuando recuperes la señal.</p>' : '';
+
+                form.innerHTML = `
+                    <div class="success-message fade-in" style="text-align: center; padding: 3rem;">
+                        <h3 style="color: var(--gold); margin-bottom: 1rem;">¡Reserva Confirmada, ${state.client.name.split(' ')[0]}!</h3>
+                        <p>Te esperamos el ${state.appointment.date} a las ${state.appointment.time}.</p>
+                        ${isOfflineMsg}
+                        <p style="font-size: 0.9rem; margin-top: 2rem; color: var(--text-secondary);">Recibirás un recordatorio por WhatsApp.</p>
+                    </div>
+                `;
+            }).catch(error => {
+                console.error("Error inesperado procesando la reserva en la UI:", error);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Confirmar Reserva';
+                }
+                alert('Ocurrió un error procesando tu reserva. Por favor intenta de nuevo.');
+            });
         });
     }
 });
