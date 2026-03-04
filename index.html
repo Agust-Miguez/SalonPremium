@@ -153,6 +153,53 @@
             display: none;
         }
 
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #d4af37; /* var(--gold) */
+            width: 33.33%; /* Default para paso 1 */
+            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Summary Panel (Upselling Effect) */
+        .summary-panel {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .summary-price {
+            font-size: 3rem;
+            font-family: 'Playfair Display', serif;
+            color: #d4af37;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+
     </style>
 </head>
 <body>
@@ -181,13 +228,16 @@
         <section class="booking-section">
             <h2>Reserva tu Experiencia</h2>
 
+            <!-- Barra de Progreso -->
+            <div class="progress-container fade-in">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
             <form id="nexus-booking-form">
                 <!-- Step 1 -->
                 <div id="step-1" class="step-container active glass-card fade-in">
                     <h3>Paso 1: Selecciona tu Servicio</h3>
 
-                    <!-- Simulación de contenido cargando (Skeleton) vs Contenido real -->
-                    <!-- Para demo, mostraremos cómo se vería el esqueleto -->
                     <div id="skeleton-services" style="display: none;">
                         <div class="skeleton skeleton-input"></div>
                         <div class="skeleton skeleton-text"></div>
@@ -195,14 +245,14 @@
                     </div>
 
                     <div id="actual-services">
-                        <select aria-label="Seleccionar servicio">
+                        <select id="service-select" aria-label="Seleccionar servicio">
                             <option value="">Seleccione un servicio...</option>
                             <option value="color">Colorimetría Avanzada</option>
-                            <option value="corte">Diseño de Corte</option>
-                            <option value="tratamiento">Tratamiento Capilar</option>
+                            <option value="corte">Diseño de Corte Exclusivo</option>
+                            <option value="tratamiento">Tratamiento Capilar Premium</option>
                         </select>
                         <input type="text" placeholder="¿Algún requerimiento especial?" aria-label="Requerimiento especial">
-                        <button type="button" class="btn" onclick="showStep2()">Siguiente Paso</button>
+                        <button type="button" class="btn" onclick="window.renderStep(2)">Siguiente Paso</button>
                     </div>
                 </div>
 
@@ -211,65 +261,37 @@
                     <h3>Paso 2: Fecha y Hora</h3>
                     <input type="date" aria-label="Fecha de reserva">
                     <input type="time" aria-label="Hora de reserva">
-                    <button type="button" class="btn" onclick="showStep3()">Siguiente Paso</button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="button" class="btn" style="flex: 1; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="window.renderStep(1)">Volver</button>
+                        <button type="button" class="btn" style="flex: 2;" onclick="window.renderStep(3)">Siguiente Paso</button>
+                    </div>
                 </div>
 
                 <!-- Step 3 -->
                 <div id="step-3" class="step-container glass-card">
-                    <h3>Paso 3: Tus Datos</h3>
+                    <h3>Paso 3: Confirmación y Datos</h3>
+
+                    <!-- Resumen con efecto Upselling -->
+                    <div class="summary-panel fade-in">
+                        <span class="summary-label">Inversión en tu Imagen</span>
+                        <div class="summary-price" id="final-price">$0</div>
+                    </div>
+
+                    <br>
                     <input type="text" placeholder="Nombre completo" aria-label="Nombre completo" required>
                     <input type="email" placeholder="Correo electrónico" aria-label="Correo electrónico" required>
                     <input type="tel" placeholder="Teléfono" aria-label="Teléfono" required>
-                    <button type="submit" class="btn">Confirmar Reserva</button>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <button type="button" class="btn" style="flex: 1; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="window.renderStep(2)">Volver</button>
+                        <button type="submit" class="btn" style="flex: 2;">Confirmar Reserva</button>
+                    </div>
                 </div>
             </form>
         </section>
     </main>
 
-    <!-- Pequeño script para simular navegación SPA / Skeleton para demostración de UX Predictiva -->
-    <script>
-        function showStep2() {
-            document.getElementById('step-1').classList.remove('active');
-
-            // Simular carga con skeleton
-            const step2 = document.getElementById('step-2');
-            step2.classList.add('active');
-
-            // Re-trigger fade in animation
-            step2.style.animation = 'none';
-            step2.offsetHeight; /* trigger reflow */
-            step2.style.animation = null;
-        }
-
-        function showStep3() {
-            document.getElementById('step-2').classList.remove('active');
-
-            const step3 = document.getElementById('step-3');
-            step3.classList.add('active');
-
-            // Re-trigger fade in
-            step3.style.animation = 'none';
-            step3.offsetHeight;
-            step3.style.animation = null;
-        }
-
-        // Demo de Skeleton Loading en el primer paso (simulando fetch)
-        document.addEventListener('DOMContentLoaded', () => {
-            const actualServices = document.getElementById('actual-services');
-            const skeletonServices = document.getElementById('skeleton-services');
-
-            actualServices.style.display = 'none';
-            skeletonServices.style.display = 'block';
-
-            // Simular carga de 2 segundos antes de mostrar el contenido real
-            setTimeout(() => {
-                skeletonServices.style.display = 'none';
-                actualServices.style.display = 'block';
-                // Trigger animation for actual services items
-                actualServices.style.opacity = '0';
-                actualServices.style.animation = 'fadeInOrganic 0.8s var(--ease-premium) forwards';
-            }, 2000);
-        });
-    </script>
+    <!-- UI Module -->
+    <script src="ui.js"></script>
 </body>
 </html>
