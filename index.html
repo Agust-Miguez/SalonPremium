@@ -40,29 +40,16 @@
     <!-- Load Google Fonts (Playfair Display & Montserrat) with font-display: swap for LCP -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
+    <!-- CSS Externo con estilos Pro y Animaciones -->
+    <link rel="stylesheet" href="styles.css">
+
     <!-- CSS Crítico Inyectado en el <head> -->
     <style>
-        :root {
-            --primary-color: #1a1a1a;
-            --accent-color: #d4af37; /* Gold for premium aesthetic */
-            --bg-color: #fcfcfc;
-            --text-color: #333333;
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Montserrat', sans-serif;
-        }
-
+        /* Base / Fallback crítico (la mayoría fue movido a styles.css para usar variables) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-body);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
         }
 
         /* Nav */
@@ -71,20 +58,19 @@
             justify-content: space-between;
             align-items: center;
             padding: 1.5rem 5%;
-            background-color: var(--primary-color);
-            color: #fff;
+            background-color: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .logo {
-            font-family: var(--font-heading);
             font-size: 2rem;
-            font-weight: 700;
             letter-spacing: 2px;
-            color: var(--accent-color);
+            color: #d4af37; /* Fallback for --gold */
             text-transform: uppercase;
         }
 
@@ -102,7 +88,7 @@
         }
 
         .nav-links a:hover {
-            color: var(--accent-color);
+            color: #d4af37;
         }
 
         /* Hero */
@@ -114,26 +100,22 @@
             align-items: center;
             text-align: center;
             padding: 0 5%;
-            background-color: var(--primary-color);
-            color: #ffffff;
-            /* Gradient overlay with background image placeholder */
-            background-image: linear-gradient(rgba(26, 26, 26, 0.8), rgba(26, 26, 26, 0.8)), url('/assets/hero-bg.jpg');
+            /* Gradient overlay con fondo negro para la estética premium */
+            background-image: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.95)), url('/assets/hero-bg.jpg');
             background-size: cover;
             background-position: center;
         }
 
         h1 {
-            font-family: var(--font-heading);
             font-size: clamp(2.5rem, 5vw, 4.5rem);
-            font-weight: 600;
             margin-bottom: 1rem;
-            color: var(--accent-color);
+            color: #d4af37;
         }
 
         .hero p {
             font-size: 1.2rem;
             max-width: 600px;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             font-weight: 300;
         }
 
@@ -147,19 +129,13 @@
         .booking-section h2 {
             text-align: center;
             margin-bottom: 3rem;
-            font-family: var(--font-heading);
             font-size: 2.5rem;
-            color: var(--primary-color);
+            color: #ffffff;
         }
 
         .step-container {
-            background: #fff;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            margin-bottom: 2rem;
             display: none; /* Controlled by SPA router/state */
-            border-top: 4px solid var(--accent-color);
+            margin-bottom: 2rem;
         }
 
         /* Para mostrar el primer paso por defecto en esta demo */
@@ -168,10 +144,15 @@
         }
 
         .step-container h3 {
-            font-family: var(--font-heading);
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            color: #d4af37;
         }
+
+        /* Simulando Skeleton en index.html inicialmente */
+        .loading-state {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -179,8 +160,8 @@
     <!-- Nav Semántico -->
     <header>
         <nav aria-label="Navegación principal">
-            <div class="logo">NEXUS</div>
-            <ul class="nav-links">
+            <div class="logo fade-in">NEXUS</div>
+            <ul class="nav-links fade-in fade-in-delay-1">
                 <li><a href="/">Inicio</a></li>
                 <li><a href="/color">Color</a></li>
                 <li><a href="/corte">Corte</a></li>
@@ -191,8 +172,9 @@
     <main>
         <!-- Hero con H1 optimizado para palabras clave locales -->
         <section class="hero">
-            <h1>Salón de Belleza Premium en Mar del Plata</h1>
-            <p>Especialistas en diseño de corte y colorimetría avanzada. Eleva tu estilo y vive la experiencia NEXUS.</p>
+            <h1 class="fade-in fade-in-delay-1">Salón de Belleza Premium en Mar del Plata</h1>
+            <p class="fade-in fade-in-delay-2">Especialistas en diseño de corte y colorimetría avanzada. Eleva tu estilo y vive la experiencia NEXUS.</p>
+            <button class="fade-in fade-in-delay-2 btn" onclick="document.getElementById('nexus-booking-form').scrollIntoView({behavior: 'smooth'})">Reserva Ahora</button>
         </section>
 
         <!-- Contenedores con ID para un formulario de 3 pasos -->
@@ -201,25 +183,93 @@
 
             <form id="nexus-booking-form">
                 <!-- Step 1 -->
-                <div id="step-1" class="step-container active">
+                <div id="step-1" class="step-container active glass-card fade-in">
                     <h3>Paso 1: Selecciona tu Servicio</h3>
-                    <p>Contenido del selector de servicios (Color, Corte, etc.).</p>
+
+                    <!-- Simulación de contenido cargando (Skeleton) vs Contenido real -->
+                    <!-- Para demo, mostraremos cómo se vería el esqueleto -->
+                    <div id="skeleton-services" style="display: none;">
+                        <div class="skeleton skeleton-input"></div>
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="width: 60%"></div>
+                    </div>
+
+                    <div id="actual-services">
+                        <select aria-label="Seleccionar servicio">
+                            <option value="">Seleccione un servicio...</option>
+                            <option value="color">Colorimetría Avanzada</option>
+                            <option value="corte">Diseño de Corte</option>
+                            <option value="tratamiento">Tratamiento Capilar</option>
+                        </select>
+                        <input type="text" placeholder="¿Algún requerimiento especial?" aria-label="Requerimiento especial">
+                        <button type="button" class="btn" onclick="showStep2()">Siguiente Paso</button>
+                    </div>
                 </div>
 
                 <!-- Step 2 -->
-                <div id="step-2" class="step-container">
+                <div id="step-2" class="step-container glass-card">
                     <h3>Paso 2: Fecha y Hora</h3>
-                    <p>Contenido del calendario y horarios disponibles.</p>
+                    <input type="date" aria-label="Fecha de reserva">
+                    <input type="time" aria-label="Hora de reserva">
+                    <button type="button" class="btn" onclick="showStep3()">Siguiente Paso</button>
                 </div>
 
                 <!-- Step 3 -->
-                <div id="step-3" class="step-container">
+                <div id="step-3" class="step-container glass-card">
                     <h3>Paso 3: Tus Datos</h3>
-                    <p>Formulario de contacto para finalizar la reserva.</p>
+                    <input type="text" placeholder="Nombre completo" aria-label="Nombre completo" required>
+                    <input type="email" placeholder="Correo electrónico" aria-label="Correo electrónico" required>
+                    <input type="tel" placeholder="Teléfono" aria-label="Teléfono" required>
+                    <button type="submit" class="btn">Confirmar Reserva</button>
                 </div>
             </form>
         </section>
     </main>
 
+    <!-- Pequeño script para simular navegación SPA / Skeleton para demostración de UX Predictiva -->
+    <script>
+        function showStep2() {
+            document.getElementById('step-1').classList.remove('active');
+
+            // Simular carga con skeleton
+            const step2 = document.getElementById('step-2');
+            step2.classList.add('active');
+
+            // Re-trigger fade in animation
+            step2.style.animation = 'none';
+            step2.offsetHeight; /* trigger reflow */
+            step2.style.animation = null;
+        }
+
+        function showStep3() {
+            document.getElementById('step-2').classList.remove('active');
+
+            const step3 = document.getElementById('step-3');
+            step3.classList.add('active');
+
+            // Re-trigger fade in
+            step3.style.animation = 'none';
+            step3.offsetHeight;
+            step3.style.animation = null;
+        }
+
+        // Demo de Skeleton Loading en el primer paso (simulando fetch)
+        document.addEventListener('DOMContentLoaded', () => {
+            const actualServices = document.getElementById('actual-services');
+            const skeletonServices = document.getElementById('skeleton-services');
+
+            actualServices.style.display = 'none';
+            skeletonServices.style.display = 'block';
+
+            // Simular carga de 2 segundos antes de mostrar el contenido real
+            setTimeout(() => {
+                skeletonServices.style.display = 'none';
+                actualServices.style.display = 'block';
+                // Trigger animation for actual services items
+                actualServices.style.opacity = '0';
+                actualServices.style.animation = 'fadeInOrganic 0.8s var(--ease-premium) forwards';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>

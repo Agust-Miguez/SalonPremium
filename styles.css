@@ -1,0 +1,200 @@
+/* Variables Pro */
+:root {
+    --gold: #d4af37;
+    --bg: #0a0a0a;
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+
+    /* Animation Easing */
+    --ease-premium: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Overrides for Luxury Feel */
+h1, h2, h3, h4, h5, h6, .logo {
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+
+/* Visuales: Glass Card */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    /* Sutil borde de gradiente a través de box-shadow */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 2.5rem;
+    transition: transform 0.4s var(--ease-premium),
+                box-shadow 0.4s var(--ease-premium);
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(212, 175, 55, 0.2);
+}
+
+/* UX Predictiva: Animaciones fadeIn orgánicas */
+@keyframes fadeInOrganic {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        filter: blur(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInOrganic 1.2s var(--ease-premium) forwards;
+    opacity: 0; /* Ensures it's hidden before animation starts */
+}
+
+.fade-in-delay-1 { animation-delay: 0.2s; }
+.fade-in-delay-2 { animation-delay: 0.4s; }
+
+/* UX Predictiva: Skeleton Loading */
+@keyframes skeletonPulse {
+    0% { background-color: rgba(255, 255, 255, 0.05); }
+    50% { background-color: rgba(255, 255, 255, 0.15); }
+    100% { background-color: rgba(255, 255, 255, 0.05); }
+}
+
+.skeleton {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    pointer-events: none;
+    color: transparent !important;
+    border: none !important;
+}
+
+.skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.08),
+        transparent
+    );
+    animation: skeletonLoading 2s infinite var(--ease-premium);
+}
+
+@keyframes skeletonLoading {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+/* Micro-interacciones: Inputs */
+input, select, textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: all 0.3s var(--ease-premium);
+    outline: none;
+    margin-bottom: 1.5rem;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-secondary);
+}
+
+input:focus, select:focus, textarea:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--gold);
+    /* Brillo al hacer focus */
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2),
+                inset 0 0 5px rgba(212, 175, 55, 0.1);
+}
+
+/* Micro-interacciones: Buttons */
+button, .btn {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 1rem 2rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    /* Curva de transición cubic-bezier */
+    transition: all 0.5s var(--ease-premium);
+}
+
+button::before, .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gold);
+    z-index: -1;
+    transition: transform 0.5s var(--ease-premium);
+    transform: scaleX(0);
+    transform-origin: right;
+}
+
+button:hover, .btn:hover {
+    color: var(--bg);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+button:hover::before, .btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Add some styles to help with skeleton demo */
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+    width: 80%;
+}
+.skeleton-title {
+    height: 2rem;
+    margin-bottom: 1rem;
+    width: 60%;
+}
+.skeleton-input {
+    height: 3.2rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
