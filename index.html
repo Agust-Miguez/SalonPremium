@@ -228,6 +228,9 @@
         <section class="booking-section">
             <h2>Reserva tu Experiencia</h2>
 
+            <!-- Elemento de saludo personalizado (oculto por defecto) -->
+            <div id="personalized-greeting" class="personalized-greeting" style="display: none; text-align: center; margin-bottom: 2rem; color: #d4af37; font-size: 1.2rem;"></div>
+
             <!-- Barra de Progreso -->
             <div class="progress-container fade-in">
                 <div id="progress-bar" class="progress-bar"></div>
@@ -259,8 +262,8 @@
                 <!-- Step 2 -->
                 <div id="step-2" class="step-container glass-card">
                     <h3>Paso 2: Fecha y Hora</h3>
-                    <input type="date" aria-label="Fecha de reserva">
-                    <input type="time" aria-label="Hora de reserva">
+                    <input type="date" id="book-date" aria-label="Fecha de reserva">
+                    <input type="time" id="book-time" aria-label="Hora de reserva">
                     <div style="display: flex; gap: 1rem;">
                         <button type="button" class="btn" style="flex: 1; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="window.renderStep(1)">Volver</button>
                         <button type="button" class="btn" style="flex: 2;" onclick="window.renderStep(3)">Siguiente Paso</button>
@@ -278,13 +281,18 @@
                     </div>
 
                     <br>
-                    <input type="text" placeholder="Nombre completo" aria-label="Nombre completo" required>
-                    <input type="email" placeholder="Correo electrónico" aria-label="Correo electrónico" required>
-                    <input type="tel" placeholder="Teléfono" aria-label="Teléfono" required>
+                    <input type="text" id="client-name" placeholder="Nombre completo" aria-label="Nombre completo" required>
+                    <input type="email" id="client-email" placeholder="Correo electrónico" aria-label="Correo electrónico" required>
+                    <input type="tel" id="client-phone" placeholder="Celular (ej: 2231234567, sin 0 ni 15)" aria-label="Teléfono" required>
 
-                    <div style="display: flex; gap: 1rem;">
+                    <div style="position: relative; display: flex; gap: 1rem; margin-top: 1.5rem;">
                         <button type="button" class="btn" style="flex: 1; border-color: rgba(255,255,255,0.2); color: #fff;" onclick="window.renderStep(2)">Volver</button>
-                        <button type="submit" class="btn" style="flex: 2;">Confirmar Reserva</button>
+
+                        <!-- Contenedor relativo para el Tooltip de dudas -->
+                        <div style="flex: 2; position: relative; display: flex; flex-direction: column;">
+                            <div id="hesitation-tooltip" class="hesitation-tooltip"></div>
+                            <button type="submit" class="btn" style="width: 100%;">Confirmar Reserva</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -293,5 +301,6 @@
 
     <!-- UI Module -->
     <script src="ui.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

@@ -63,6 +63,10 @@ function renderStep(stepNumber) {
     if (stepNumber === 3 && currentService && serviceConfig[currentService]) {
         animatePrice('final-price', serviceConfig[currentService].price);
     }
+
+    // Despachar evento personalizado para que app.js lo escuche
+    const event = new CustomEvent('stepChanged', { detail: { step: stepNumber } });
+    document.dispatchEvent(event);
 }
 
 function updateProgressBar(step) {

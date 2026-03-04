@@ -198,3 +198,53 @@ button:hover::before, .btn:hover::before {
     margin-bottom: 1.5rem;
     width: 100%;
 }
+
+/* Validation & Feedback */
+.input-error {
+    border-color: #ff4d4d !important;
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.2), inset 0 0 5px rgba(255, 77, 77, 0.1) !important;
+}
+
+/* Hesitation Tooltip */
+.hesitation-tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(10, 10, 10, 0.95);
+    color: var(--gold);
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s var(--ease-premium);
+    border: 1px solid var(--gold);
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.hesitation-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--gold) transparent transparent transparent;
+}
+
+.hesitation-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Personalized Greeting */
+.personalized-greeting {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+}
