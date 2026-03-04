@@ -37,6 +37,12 @@ const api = {
             }
         }
 
+        // Aseguramos que los datos de tracking pasen limpiamente
+        if (cleanPayload.tracking) {
+            cleanPayload.conversion_time_seconds = cleanPayload.tracking.timeToConvert;
+            cleanPayload.traffic_source = cleanPayload.tracking.trafficSource;
+        }
+
         return cleanPayload;
     },
 

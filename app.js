@@ -15,8 +15,28 @@ const state = {
     appointment: {
         date: '',
         time: ''
+    },
+    tracking: {
+        startTime: Date.now(),
+        timeToConvert: 0,
+        trafficSource: ''
     }
 };
+
+// 1.5 Business Tracking Setup
+function setupBusinessTracking() {
+    // Detectar fuente de tráfico (Referrer o UTM)
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get('utm_source');
+
+    if (utmSource) {
+        state.tracking.trafficSource = `UTM: ${utmSource}`;
+    } else if (document.referrer) {
+        state.tracking.trafficSource = `Referrer: ${new URL(document.referrer).hostname}`;
+    } else {
+        state.tracking.trafficSource = 'Direct / Bookmark';
+    }
+}
 
 // 2. Reconocimiento de Usuario (Personalización)
 function checkReturningUser() {
@@ -120,6 +140,7 @@ function showHesitationTooltip() {
 document.addEventListener('DOMContentLoaded', () => {
     checkReturningUser();
     setupHesitationDetector();
+    setupBusinessTracking();
 
     const form = document.getElementById('nexus-booking-form');
     const phoneInput = document.getElementById('client-phone');
@@ -148,6 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
             state.appointment.date = dateEl ? dateEl.value : '';
             state.appointment.time = timeEl ? timeEl.value : '';
 
+            // Calcular Tiempo de Conversión (en segundos)
+            state.tracking.timeToConvert = Math.round((Date.now() - state.tracking.startTime) / 1000);
+
             // Validar teléfono antes de enviar
             if (!validatePhone(state.client.phone)) {
                 if (phoneEl) {
@@ -170,18 +194,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Guardar localmente para personalización futura
                 saveUserToStorage();
 
-                // Mostrar mensaje de éxito (o advertencia si se guardó offline)
-                const isOfflineMsg = !navigator.onLine ?
-                    '<p style="color: var(--gold); font-size: 0.85rem; margin-top: 1rem;">Estás sin conexión. Tu reserva se enviará automáticamente cuando recuperes la señal.</p>' : '';
+                // Create elements safely to avoid Self-XSS
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success-message fade-in';
+                successDiv.style.cssText = 'text-align: center; padding: 3rem;';
 
-                form.innerHTML = `
-                    <div class="success-message fade-in" style="text-align: center; padding: 3rem;">
-                        <h3 style="color: var(--gold); margin-bottom: 1rem;">¡Reserva Confirmada, ${state.client.name.split(' ')[0]}!</h3>
-                        <p>Te esperamos el ${state.appointment.date} a las ${state.appointment.time}.</p>
-                        ${isOfflineMsg}
-                        <p style="font-size: 0.9rem; margin-top: 2rem; color: var(--text-secondary);">Recibirás un recordatorio por WhatsApp.</p>
-                    </div>
-                `;
+                const h3 = document.createElement('h3');
+                h3.style.cssText = 'color: var(--gold); margin-bottom: 1rem;';
+                h3.textContent = `¡Reserva Confirmada, ${state.client.name.split(' ')[0]}!`;
+
+                const pDate = document.createElement('p');
+                pDate.textContent = `Te esperamos el ${state.appointment.date} a las ${state.appointment.time}.`;
+
+                const pReminder = document.createElement('p');
+                pReminder.style.cssText = 'font-size: 0.9rem; margin-top: 2rem; color: var(--text-secondary);';
+                pReminder.textContent = 'Recibirás un recordatorio por WhatsApp.';
+
+                successDiv.appendChild(h3);
+                successDiv.appendChild(pDate);
+
+                if (!navigator.onLine) {
+                    const pOffline = document.createElement('p');
+                    pOffline.style.cssText = 'color: var(--gold); font-size: 0.85rem; margin-top: 1rem;';
+                    pOffline.textContent = 'Estás sin conexión. Tu reserva se enviará automáticamente cuando recuperes la señal.';
+                    successDiv.appendChild(pOffline);
+                }
+
+                successDiv.appendChild(pReminder);
+
+                // Clear form and append success message
+                form.innerHTML = '';
+                form.appendChild(successDiv);
             }).catch(error => {
                 console.error("Error inesperado procesando la reserva en la UI:", error);
                 if (submitBtn) {
