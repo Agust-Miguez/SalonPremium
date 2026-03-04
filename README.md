@@ -3,7 +3,7 @@
 This is a premium Single Page Application (SPA) designed for a high-end beauty salon located in Mar del Plata.
 
 ## Features
-- **Authority SEO**: Geolocation meta-tofb Open Graph, Twitter Cards, dynamic structured data.
+- **Authority SEO**: Geolocation meta-tags, Open Graph, Twitter Cards, dynamic structured data.
 - **Optimized Performance**: Critical CSS injection, font-display swap, lazy loading.
 - **Semantic Structure**: Modern HTML5 elements, pre-rendering hooks for dynamic content.
 - **Premium UI**: Luxury dark/gold aesthetic, deep shadows, glassmorphism, fluid animations.
